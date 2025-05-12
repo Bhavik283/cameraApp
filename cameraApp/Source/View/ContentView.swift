@@ -58,25 +58,10 @@ struct EditableListView: View {
             List(items.indices, id: \.self, selection: $selectedIndex) { index in
                 Group {
                     if editingIndex == index {
-                        NSTextFieldWrapper(text: getTextBinding(index: index), isEditing: editingBinding(index: index))
+                        InputField(isFocused: editingBinding(index: index), text: getTextBinding(index: index))
                             .frame(height: 20)
                     } else {
-                        Text(items[index])
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
-                            .onTapGesture(count: 1) {
-                                selectedIndex = index
-                                if editingIndex != index {
-                                    editingIndex = nil
-                                }
-                            }
-                            .simultaneousGesture(
-                                TapGesture(count: 2)
-                                    .onEnded {
-                                        selectedIndex = index
-                                        editingIndex = index
-                                    }
-                            )
+                        TextItem(items: $items, selectedIndex: $selectedIndex, editingIndex: $editingIndex, index: index)
                     }
                 }
                 .padding(0)
@@ -84,24 +69,8 @@ struct EditableListView: View {
                 .listRowSeparator(.hidden)
             }
             .listStyle(.bordered)
-
-            HStack {
-                Button("Add Item") {
-                    items.append("New Item \(items.count + 1)")
-                }
-
-                Spacer()
-
-                if let selected = selectedIndex {
-                    Button("Remove") {
-                        if selected < items.count {
-                            items.remove(at: selected)
-                            selectedIndex = nil
-                        }
-                    }
-                }
-            }
-            .padding()
+            
+            Buttons(items: $items, selectedIndex: $selectedIndex)
         }
     }
 
