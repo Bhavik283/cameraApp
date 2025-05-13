@@ -61,7 +61,19 @@ struct EditableListView: View {
                         InputField(isFocused: editingBinding(index: index), text: getTextBinding(index: index))
                             .frame(height: 20)
                     } else {
-                        TextItem(items: $items, selectedIndex: $selectedIndex, editingIndex: $editingIndex, index: index)
+                        Text(items[index])
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if selectedIndex == index {
+                                    editingIndex = index
+                                } else {
+                                    selectedIndex = index
+                                    if editingIndex != index {
+                                        editingIndex = nil
+                                    }
+                                }
+                            }
                     }
                 }
                 .padding(0)
@@ -69,8 +81,8 @@ struct EditableListView: View {
                 .listRowSeparator(.hidden)
             }
             .listStyle(.bordered)
-            
-            Buttons(items: $items, selectedIndex: $selectedIndex)
+
+            Buttons(items: $items, selectedIndex: $selectedIndex, editingIndex: $editingIndex)
         }
     }
 

@@ -30,32 +30,10 @@ struct InputField: View {
     }
 }
 
-struct TextItem: View {
-    @Binding var items: [String]
-    @Binding var selectedIndex: Int?
-    @Binding var editingIndex: Int?
-    let index: Int
-
-    var body: some View {
-        Text(items[index])
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                if selectedIndex == index {
-                    editingIndex = index
-                } else {
-                    selectedIndex = index
-                    if editingIndex != index {
-                        editingIndex = nil
-                    }
-                }
-            }
-    }
-}
-
 struct Buttons: View {
     @Binding var items: [String]
     @Binding var selectedIndex: Int?
+    @Binding var editingIndex: Int?
 
     var body: some View {
         HStack {
@@ -70,6 +48,7 @@ struct Buttons: View {
                     if selected < items.count {
                         items.remove(at: selected)
                         selectedIndex = nil
+                        editingIndex = nil
                     }
                 }
             }
